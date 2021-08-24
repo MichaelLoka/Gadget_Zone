@@ -1,27 +1,46 @@
 package com.example.storeapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements Adapter.clickMenuItemListener
 {
+    Button wishlist_btn;
+    Button cart_btn;
     List<String> Descriptions;
     List<Integer> images;
     List<String> Price;
+    List<Product> Products;
     RecyclerView datalist;
     Adapter myadapter;
+    myDatabaseHelper MyStore = new myDatabaseHelper(this);
+    String Phone_Number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Phone_Number = getIntent().getExtras().getString(Login.EXTRA_PHONENUMBER);       //getting phone number from Main Activity
+
 
         // Get The Icon Beside The Title
         ActionBar actionBar = getSupportActionBar();
@@ -30,9 +49,14 @@ public class MainActivity extends AppCompatActivity
 
         datalist = findViewById(R.id.datalist);
 
+
+        wishlist_btn = findViewById(R.id.wishBtn);
+        cart_btn = findViewById(R.id.cartBtn);
         Descriptions = new ArrayList<>();
         images = new ArrayList<>();
         Price = new ArrayList<>();
+        Products = new ArrayList<>();
+
 
         Descriptions.add("IPhone XS");
         Descriptions.add("Samsung A50");
@@ -67,9 +91,51 @@ public class MainActivity extends AppCompatActivity
         Price.add("$7500");
         Price.add("6600");
 
-        myadapter = new Adapter(this,Descriptions,images,Price);
+        for (int i = 0 ; i < Descriptions.size();i++){
+            Products.add(new Product(Descriptions.get(i),Price.get(i),images.get(i)));
+            MyStore.InsertProduct(Products.get(i),i);
+        }
+
+
+        myadapter = new Adapter(this,Descriptions,images,Price,this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,RecyclerView.VERTICAL,false);
         datalist.setLayoutManager(gridLayoutManager);
         datalist.setAdapter(myadapter);
+
+
+        wishlist_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,WishList.class);
+                i.putExtra(Login.EXTRA_PHONENUMBER,Phone_Number);
+                startActivity(i);
+            }
+        });
+
+        cart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,Cart.class);
+                i.putExtra(Login.EXTRA_PHONENUMBER,Phone_Number);
+                startActivity(i);
+            }
+        });
+
+    }
+
+    @Override
+    public boolean clickMenuItem(MenuItem menuItem, int position) {
+        switch (menuItem.getItemId()) {
+            case R.id.cartBtn:
+                Toast.makeText(getApplicationContext(),"Item Added to cart " + position,Toast.LENGTH_SHORT).show();
+                MyStore.InsertTO(Phone_Number,position,myDatabaseHelper.EXTRA_CARTTABLE);
+                return true;
+            case R.id.wishBtn:
+                Toast.makeText(getApplicationContext(),"Item Added to WishList " + position,Toast.LENGTH_SHORT).show();
+                MyStore.InsertTO(Phone_Number,position,myDatabaseHelper.EXTRA_WISHLISTTABLE);
+                return true;
+            default:
+                return false;
+        }
     }
 }

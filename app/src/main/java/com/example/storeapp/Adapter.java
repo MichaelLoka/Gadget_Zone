@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +25,20 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     List<String> Price;
     List<Integer> images;
     LayoutInflater inflater;
+    private clickMenuItemListener clickMenuItemListener;
 
-    public Adapter(Context context,List<String> Descriptions,List<Integer> images, List<String> Price) {
+    public Adapter(Context context,List<String> Descriptions,List<Integer> images, List<String> Price,clickMenuItemListener clickMenuItemListener) {
         this.Descriptions = Descriptions;
         this.images = images;
         this.Price = Price;
         this.inflater = LayoutInflater.from(context);
+        this.clickMenuItemListener = clickMenuItemListener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_grid_layout,parent,false);
-        return new ViewHolder(view);
+        return new ViewHolder(view,clickMenuItemListener);
     }
 
     @Override
@@ -50,18 +53,24 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
         return Descriptions.size();
     }
 
+
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener
     {
         private static final String TAG = "MyViewHolder";
         TextView Description;
         TextView Price;
         ImageView gridicon;
+        clickMenuItemListener clickMenuItemListener;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView,clickMenuItemListener clickMenuItemListener) {
             super(itemView);
             Description = itemView.findViewById(R.id.Description);
             Price = itemView.findViewById(R.id.Price);
             gridicon = itemView.findViewById(R.id.imageView3);
+
+            this.clickMenuItemListener = clickMenuItemListener;
             gridicon.setOnClickListener(this);
         }
 
@@ -79,16 +88,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.cartBtn:
-                    Log.d(TAG, "Item Added to cart" + getAdapterPosition());
-                    return true;
-                case R.id.wishBtn:
-                    Log.d(TAG, "Item Added to Wishlist" + getAdapterPosition());
-                    return true;
-                default:
-                    return false;
-            }
+            boolean result = clickMenuItemListener.clickMenuItem(menuItem, getAdapterPosition());
+            return result;
         }
+    }
+    public interface clickMenuItemListener{
+        boolean clickMenuItem(MenuItem menuItem,int position);
     }
 }

@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 public class Login extends AppCompatActivity {
 
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://loginregister-database-default-rtdb.firebaseio.com/");
+    public static final String EXTRA_PHONENUMBER = "com.example.storeapp.Login.EXTRA_PHONENUMBER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,9 @@ public class Login extends AppCompatActivity {
                                     Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
 
                                     // open MainActivity when Successfull login
-                                    startActivity(new Intent(Login.this,MainActivity.class));
+                                    Intent i = new Intent(Login.this,MainActivity.class);
+                                    i.putExtra(EXTRA_PHONENUMBER,phoneTxt);
+                                    startActivity(i);
                                     finish();
                                 }
 
