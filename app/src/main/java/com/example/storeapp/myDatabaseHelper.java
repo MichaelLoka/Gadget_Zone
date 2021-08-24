@@ -115,6 +115,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         for (int counter = 0; counter < cursor_idPRODUCT.getCount();counter++){
             cursors.add(db.query(PRODUCTS_TABLE, null, selection, new String[]{productsID[counter]}, null, null, null));
         }
+        db.close();
 
         return cursors;
     }

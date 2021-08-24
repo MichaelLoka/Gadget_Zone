@@ -64,6 +64,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         CartDatalist.setAdapter(myAdapter);
 
 
+
     }
 
     @Override
