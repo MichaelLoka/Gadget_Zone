@@ -20,18 +20,12 @@
         android:id="@+id/cartBtn"
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:layout_marginStart="2dp"
         android:text="My Cart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/wishBtn"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="2dp"
-        android:text="My Wishlist"
+        app:layout_constraintBottom_toBottomOf="@+id/datalist"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.029" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

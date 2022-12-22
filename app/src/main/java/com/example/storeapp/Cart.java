@@ -19,7 +19,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
     List<Cursor> cursor;
     List<String> Names;
     List<Integer> images;
-    List<String> Price;
+    List<Integer> Price;
     RecyclerView CartDatalist;
     Adapter myAdapter;
     myDatabaseHelper myStore;
@@ -34,7 +34,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         images = new ArrayList<>();
         Price = new ArrayList<>();
 
-        CartDatalist = findViewById(R.id.CartDataList);
+        CartDatalist = findViewById(R.id.cartlist);
 
         String Phone_Number = getIntent().getExtras().getString(Login.EXTRA_PHONENUMBER);      //getting phone number from Main Activity
         cursor = myStore.FetchForData(Phone_Number);   //fetching Products from Cart Table
@@ -46,7 +46,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
             if (cursor != null) {
                 while (cursor.get(counter).moveToNext()) {
                     Names.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow("Name"))); //Name_Column
-                    Price.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow("price"))); //Price_Column
+                    Price.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow("price"))); //Price_Column
                     images.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow("photo")));//Image_Column
 
 
@@ -62,7 +62,6 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1,RecyclerView.VERTICAL,false);
         CartDatalist.setLayoutManager(gridLayoutManager);
         CartDatalist.setAdapter(myAdapter);
-
 
 
     }

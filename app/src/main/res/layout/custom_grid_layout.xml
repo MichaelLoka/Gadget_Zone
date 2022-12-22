@@ -46,7 +46,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/Price"
+                android:id="@+id/Price_contanier"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="4dp"

@@ -15,16 +15,16 @@ import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
-    List<String> Descriptions;
-    List<String> Price;
+    List<String> Names;
+    List<Integer> Prices;
     List<Integer> images;
     LayoutInflater inflater;
     private clickMenuItemListener clickMenuItemListener;
 
-    public Adapter(Context context,List<String> name,List<Integer> images, List<String> Price,clickMenuItemListener clickMenuItemListener) {
-        this.Descriptions = name;
+    public Adapter(Context context,List<String> name,List<Integer> images, List<Integer> Price,clickMenuItemListener clickMenuItemListener) {
+        this.Names = name;
         this.images = images;
-        this.Price = Price;
+        this.Prices = Price;
         this.inflater = LayoutInflater.from(context);
         this.clickMenuItemListener = clickMenuItemListener;
     }
@@ -37,14 +37,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
-        holder.name.setText(Descriptions.get(position));
-        holder.Price.setText(Price.get(position));
+        holder.name.setText(Names.get(position));
+        holder.price.setText(String.valueOf(Prices.get(position)));
         holder.gridicon.setImageResource(images.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return Descriptions.size();
+        return Names.size();
     }
 
 
@@ -53,14 +53,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener
     {
         TextView name;
-        TextView Price;
+        TextView price;
         ImageView gridicon;
         clickMenuItemListener clickMenuItemListener;
 
         public ViewHolder(View itemView,clickMenuItemListener clickMenuItemListener) {
             super(itemView);
             name = itemView.findViewById(R.id.Description);
-            Price = itemView.findViewById(R.id.Price);
+            price = itemView.findViewById(R.id.Price_contanier);
             gridicon = itemView.findViewById(R.id.imageView3);
 
             this.clickMenuItemListener = clickMenuItemListener;

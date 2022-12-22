@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +22,12 @@ public class MainActivity extends AppCompatActivity implements Adapter.clickMenu
     Button cart_btn;
     List<String> Names;
     List<Integer> images;
-    List<String> Price;
+    List<Integer> Prices;
     List<Product> Products;
-    List<Integer> Avaliabilty;
+
     RecyclerView datalist;
     Adapter myadapter;
-    myDatabaseHelper MyStore = new myDatabaseHelper(this);
+    myDatabaseHelper MyStore;
     String Phone_Number;
 
     @Override
@@ -35,7 +36,10 @@ public class MainActivity extends AppCompatActivity implements Adapter.clickMenu
         setContentView(R.layout.activity_main);
 
         Phone_Number = getIntent().getExtras().getString(Login.EXTRA_PHONENUMBER);       //getting phone number from Main Activity
-
+        MyStore = new myDatabaseHelper(this);
+        Names = new ArrayList<String>();
+        images = new ArrayList<Integer>();
+        Prices = new ArrayList<Integer>();
 
         // Get The Icon Beside The Title
         ActionBar actionBar = getSupportActionBar();
@@ -47,8 +51,16 @@ public class MainActivity extends AppCompatActivity implements Adapter.clickMenu
 
         cart_btn = findViewById(R.id.cartBtn);
 
+        Cursor cursor = MyStore.Retrive_all();
 
-        myadapter = new Adapter(this, Names,images,Price,this);
+        while (!cursor.isAfterLast()) {
+            Names.add(cursor.getString(0));
+            Prices.add(cursor.getInt(1));
+            images.add(cursor.getInt(2));
+            cursor.moveToNext();
+        }
+
+        myadapter = new Adapter(this, Names,images, Prices,this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,RecyclerView.VERTICAL,false);
         datalist.setLayoutManager(gridLayoutManager);
         datalist.setAdapter(myadapter);
@@ -70,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.clickMenu
         switch (menuItem.getItemId()) {
             case R.id.cartBtn:
                 Toast.makeText(getApplicationContext(),"Item Added to cart " + position,Toast.LENGTH_SHORT).show();
-                MyStore.InsertTOCart(Phone_Number,position,50);
+                MyStore.InsertTOCart(Phone_Number,position+1,50);
                 return true;
             default:
                 return false;
