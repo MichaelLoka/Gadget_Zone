@@ -1,24 +1,34 @@
 package com.example.storeapp;
 
-import android.text.Html;
-
 public class Product {
-    private String Description;
+    private String Name;
     private String Price;
     private int Imange_id;
+    private int Quantity;
+    private String Category;
 
-    public Product(String Description, String Price, int Image_id){
-        this.Description = Description;
+    public Product(String Name, String Price, int Image_id, int quantity,String Category){
+        this.Name = Name;
         this.Imange_id = Image_id;
         this.Price = Price;
+        this.Quantity = quantity;
+        this.Category = Category;
     }
 
-    public String getDescription() {
-        return Description;
+    public String getCategory() {
+        return Category;
     }
 
-    public void setDescription(String description) {
-        Description = description;
+    public void setCategory(String category) {
+        Category = category;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
     }
 
     public String getPrice() {
@@ -29,11 +39,20 @@ public class Product {
         Price = price;
     }
 
-    public long getImange_id() {
+    public int getImange_id() {
         return Imange_id;
     }
 
     public void setImange_id(int imange_id) {
         Imange_id = imange_id;
     }
+
+    public int getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        Quantity = quantity;
+    }
+
 }

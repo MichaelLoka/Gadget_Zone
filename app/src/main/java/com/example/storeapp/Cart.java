@@ -17,7 +17,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
 
 
     List<Cursor> cursor;
-    List<String> Descriptions;
+    List<String> Names;
     List<Integer> images;
     List<String> Price;
     RecyclerView CartDatalist;
@@ -30,14 +30,14 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         setContentView(R.layout.activity_cart);
 
         myStore = new myDatabaseHelper(this);
-        Descriptions = new ArrayList<>();
+        Names = new ArrayList<>();
         images = new ArrayList<>();
         Price = new ArrayList<>();
 
         CartDatalist = findViewById(R.id.CartDataList);
 
         String Phone_Number = getIntent().getExtras().getString(Login.EXTRA_PHONENUMBER);      //getting phone number from Main Activity
-        cursor = myStore.FetchForData(Phone_Number,myDatabaseHelper.EXTRA_CARTTABLE);   //fetching Products from Cart Table
+        cursor = myStore.FetchForData(Phone_Number);   //fetching Products from Cart Table
 
 
         // assigning Retreived Data to the lists to be added into the Adapter
@@ -45,7 +45,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         while (counter < cursor.size()) {
             if (cursor != null) {
                 while (cursor.get(counter).moveToNext()) {
-                    Descriptions.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Description_Column)));
+                    Names.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Name_Column)));
                     Price.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Price_Column)));
                     images.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Image_Column)));
 
@@ -58,7 +58,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         }
         //Adapter For the Custom View
 
-        myAdapter = new Adapter(this,Descriptions,images,Price,this);
+        myAdapter = new Adapter(this,Names,images,Price,this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1,RecyclerView.VERTICAL,false);
         CartDatalist.setLayoutManager(gridLayoutManager);
         CartDatalist.setAdapter(myAdapter);

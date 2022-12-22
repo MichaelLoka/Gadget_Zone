@@ -11,8 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StoreApp">
-        <activity android:name=".Cart"></activity>
-        <activity android:name=".WishList" />
+        <activity
+            android:name=".Chart"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Admin_panel"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity android:name=".Cart" />
         <activity android:name=".Register" />
         <activity
             android:name=".Login"

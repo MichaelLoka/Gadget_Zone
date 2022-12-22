@@ -1,20 +1,14 @@
 package com.example.storeapp;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -27,8 +21,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     LayoutInflater inflater;
     private clickMenuItemListener clickMenuItemListener;
 
-    public Adapter(Context context,List<String> Descriptions,List<Integer> images, List<String> Price,clickMenuItemListener clickMenuItemListener) {
-        this.Descriptions = Descriptions;
+    public Adapter(Context context,List<String> name,List<Integer> images, List<String> Price,clickMenuItemListener clickMenuItemListener) {
+        this.Descriptions = name;
         this.images = images;
         this.Price = Price;
         this.inflater = LayoutInflater.from(context);
@@ -43,7 +37,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
-        holder.Description.setText(Descriptions.get(position));
+        holder.name.setText(Descriptions.get(position));
         holder.Price.setText(Price.get(position));
         holder.gridicon.setImageResource(images.get(position));
     }
@@ -58,15 +52,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener
     {
-        private static final String TAG = "MyViewHolder";
-        TextView Description;
+        TextView name;
         TextView Price;
         ImageView gridicon;
         clickMenuItemListener clickMenuItemListener;
 
         public ViewHolder(View itemView,clickMenuItemListener clickMenuItemListener) {
             super(itemView);
-            Description = itemView.findViewById(R.id.Description);
+            name = itemView.findViewById(R.id.Description);
             Price = itemView.findViewById(R.id.Price);
             gridicon = itemView.findViewById(R.id.imageView3);
 
