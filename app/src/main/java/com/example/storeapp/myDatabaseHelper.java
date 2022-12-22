@@ -63,15 +63,15 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
 
         //Cart table
-        sqLiteDatabase.execSQL("create table cart (User_phoneNum integer not null," +
+        sqLiteDatabase.execSQL("create table cart (User_phoneNum TEXT not null," +
                 "product_id integer Not null,quantity integer not null," +
                 "FOREIGN KEY (product_id) references products(product_id)," +
-                "PRIMARY KEY (product_id,user_id));");
+                "PRIMARY KEY (product_id,User_phoneNum));");
 
 
         //transaction table
-        sqLiteDatabase.execSQL("CREATE TABLE Transactions (trans_id Interger primary key autoincrement," +
-                "product_id integer not null, user_id integer not null," +
+        sqLiteDatabase.execSQL("CREATE TABLE Transactions (trans_id integer primary key autoincrement," +
+                "product_id integer not null, USER_PHONENUM integer not null," +
                 "quantity integer not null," +
                 "date Date not null," +
                 "FOREIGN KEY (product_id) references products(product_id));");
@@ -84,19 +84,43 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ CART_TABLE);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS categories");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS Transactions");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS Wishlist");
         onCreate(sqLiteDatabase);
     }
 
     public void InsertTOCart(String PhoneNumber, int ID_Product, int quantity){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues row = new ContentValues();
-        row.put("User_phoneNum",PhoneNumber);
+        row.put("User_phoneNum","0"+PhoneNumber);
         row.put("product_id",ID_Product);
         row.put("quantity",quantity);
 
         // insert into Table that we choose whether be Wish list Table or Cart Table
         db.insert("CART",null,row);
         db.close();
+    }
+
+    public void RemoveFromCart(String PhoneNumber,int ID_Product)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("cart","User_phoneNum like ? and product_id like ?",new String[]{PhoneNumber,String.valueOf(ID_Product)});
+        db.close();
+    }
+    public Cursor Retrive_products_of_category(String cat) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select name ,price,photo from products where category like ?",new String[] {cat});
+        cursor.moveToFirst();
+        db.close();
+        return cursor;
+    }
+
+    public Cursor Retrive_all() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select name,price,photo from products",null);
+//        cursor = db.query("products",new String[]{"name","price","photo"},null,null,null,null,null);
+        cursor.moveToFirst();
+        db.close();
+        return cursor;
     }
 
     public void InsertProduct(Product product,int ID_Product){
@@ -168,7 +192,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         String selection =  "product_id" + " = ?";
 
         //fetching ProductsIDs from the Table variable where phoneUser
-        Cursor cursor_idPRODUCT = db.rawQuery("SELECT product_id FROM cart WHERE cart LIKE ?",UserPhone);
+        Cursor cursor_idPRODUCT = db.rawQuery("SELECT product_id FROM cart WHERE User_phoneNum LIKE ?",UserPhone);
 
 
         String[] productsID = new String[cursor_idPRODUCT.getCount()]; //setting a size for the productsIDs Array
