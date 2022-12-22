@@ -45,9 +45,9 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         while (counter < cursor.size()) {
             if (cursor != null) {
                 while (cursor.get(counter).moveToNext()) {
-                    Names.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Name_Column)));
-                    Price.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Price_Column)));
-                    images.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow(myDatabaseHelper.Image_Column)));
+                    Names.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow("Name"))); //Name_Column
+                    Price.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow("price"))); //Price_Column
+                    images.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow("photo")));//Image_Column
 
 
                 }
