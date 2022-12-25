@@ -44,21 +44,21 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         row2.put("quantity", 10);
         row2.put("price", 500);
         row2.put("category","Electronics");
-        row2.put("photo",R.drawable.airpods);
+        row2.put("photo", R.drawable.airpods);
         sqLiteDatabase.insert("products ", null, row2);
 
         row2.put("name", "dell_g3");
         row2.put("quantity", 20);
         row2.put("price", 5000);
         row2.put("category","Electronics");
-        row2.put("photo",R.drawable.dell_g3);
+        row2.put("photo", R.drawable.dell_g3);
         sqLiteDatabase.insert("products ", null, row2);
 
         row2.put("name", "iphone xs");
         row2.put("quantity", 50);
         row2.put("price", 8000);
         row2.put("category","Electronics");
-        row2.put("photo",R.drawable.iphone_xs);
+        row2.put("photo", R.drawable.iphone_xs);
         sqLiteDatabase.insert("products ", null, row2);
 
 
@@ -108,7 +108,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     }
     public Cursor Retrive_products_of_category(String cat) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select name ,price,photo from products where category like ?",new String[] {cat});
+        Cursor cursor = db.rawQuery("select * from products where category like ?",new String[] {cat});
         cursor.moveToFirst();
         db.close();
         return cursor;
@@ -116,7 +116,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor Retrive_all() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select name,price,photo from products",null);
+        Cursor cursor = db.rawQuery("select * from products",null);
 //        cursor = db.query("products",new String[]{"name","price","photo"},null,null,null,null,null);
         cursor.moveToFirst();
         db.close();
@@ -157,6 +157,15 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("Products","Product_id like ?",new String[]{String.valueOf(ID_Product)});
         db.close();
+    }
+
+    public Cursor Retrieve_All_Category()
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Categories",null);
+        cursor.moveToFirst();
+        db.close();
+        return cursor;
     }
 
     public void InsertCategory(String Categorey_name,int image_id){

@@ -5,9 +5,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +27,9 @@ public class Login extends AppCompatActivity {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://loginregister-database-default-rtdb.firebaseio.com/");
     public static final String EXTRA_PHONENUMBER = "com.example.storeapp.Login.EXTRA_PHONENUMBER";
 
+    private CheckBox chkBoxRememberMe;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +42,23 @@ public class Login extends AppCompatActivity {
 
         final EditText phone =findViewById(R.id.phone);
         final EditText password =findViewById(R.id.password);
+        final CheckBox remember=findViewById(R.id.remember);
         final Button loginBrn =findViewById(R.id.loginBtn);
         final TextView registerNowBtn =findViewById(R.id.registerNowBtb);
+        final TextView forget =findViewById(R.id.forget);
+
+//        SharedPreferences preferences = getSharedPreferences( "checkbox",MODE_PRIVATE) ;
+//        String checkbox = preferences.getString("remember","");
+//
+//        if (checkbox.equals ("true")) {
+//            Intent i = new Intent(Login.this,MainActivity.class);
+//            startActivity(i);
+//            finish();
+//        }
+//        else if (checkbox.equals ("false")){
+//            Toast.makeText(Login.this, "sign in", Toast.LENGTH_SHORT).show();
+//        }
+
         loginBrn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,16 +84,24 @@ public class Login extends AppCompatActivity {
                                 // now check if password entered match with the value in the firebase data
 
                                 final  String getPassword = snapshot.child(phoneTxt).child("password").getValue(String.class);
-
                                 if(getPassword.equals(passwordTxt)){
 
-                                    Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
+                                    if(getPassword.equals("admin")){
+                                        Intent intent = new Intent(Login.this,Admin_panel.class);
+                                        intent.putExtra(EXTRA_PHONENUMBER,phoneTxt);
+                                        startActivity(intent);
+                                        Toast.makeText(Login.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
+                                        //finish();
+                                    }
+                                    else {// open MainActivity when Successfull login
+                                        Intent i = new Intent(Login.this, Categories_list.class);
+                                        i.putExtra(EXTRA_PHONENUMBER, phoneTxt);
+                                        startActivity(i);
+                                        //finish();
+                                        Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
 
-                                    // open MainActivity when Successfull login
-                                    Intent i = new Intent(Login.this,MainActivity.class);
-                                    i.putExtra(EXTRA_PHONENUMBER,phoneTxt);
-                                    startActivity(i);
-                                    finish();
+                                    }
+
                                 }
 
                                 else {
@@ -98,6 +128,25 @@ public class Login extends AppCompatActivity {
 
             }
         });
+//        remember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if (compoundButton.isChecked ()) {
+//                    SharedPreferences preferences = getSharedPreferences( "checkbox",MODE_PRIVATE) ;
+//                    SharedPreferences.Editor editor = preferences .edit() ;
+//                    editor .putString( "remember","true");
+//                    editor. apply ( ) ;
+//                    Toast.makeText( Login.this,"Checked", Toast. LENGTH_SHORT).show() ;
+//                }
+//                else if (!compoundButton.isChecked ()) {
+//                    SharedPreferences preferences = getSharedPreferences( "checkbox",MODE_PRIVATE) ;
+//                    SharedPreferences.Editor editor = preferences.edit() ;
+//                    editor .putString( "remember","false");
+//                    editor. apply ( ) ;
+//                    Toast.makeText( Login.this,"unChecked", Toast. LENGTH_SHORT).show() ;
+//                }
+//            }
+//        });
 
         registerNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,8 +156,17 @@ public class Login extends AppCompatActivity {
                 startActivity(new Intent(Login.this,Register.class));
             }
         });
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Login.this,ForgetPassword.class));
+
+            }
+        });
+
 
 
 
     }
+
 }

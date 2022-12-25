@@ -2,17 +2,26 @@ package com.example.storeapp;
 
 public class Product {
     private String Name;
-    private String Price;
+    private int Price;
     private int Imange_id;
     private int Quantity;
     private String Category;
-
-    public Product(String Name, String Price, int Image_id, int quantity,String Category){
+    private int id;
+    public Product(int id, String Name, int quantity, int Price, int Image_id, String Category){
+        this.id = id;
         this.Name = Name;
         this.Imange_id = Image_id;
         this.Price = Price;
         this.Quantity = quantity;
         this.Category = Category;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCategory() {
@@ -31,11 +40,11 @@ public class Product {
         Name = name;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return Price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         Price = price;
     }
 

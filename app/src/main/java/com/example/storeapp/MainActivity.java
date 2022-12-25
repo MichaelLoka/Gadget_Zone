@@ -18,17 +18,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Adapter.clickMenuItemListener
 {
-    Button wishlist_btn;
     Button cart_btn;
-    List<String> Names;
-    List<Integer> images;
-    List<Integer> Prices;
-    List<Product> Products;
+
+    ArrayList<Product> Products = new ArrayList<Product>();
 
     RecyclerView datalist;
     Adapter myadapter;
     myDatabaseHelper MyStore;
-    String Phone_Number;
+    static String Phone_Number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +34,8 @@ public class MainActivity extends AppCompatActivity implements Adapter.clickMenu
 
         Phone_Number = getIntent().getExtras().getString(Login.EXTRA_PHONENUMBER);       //getting phone number from Main Activity
         MyStore = new myDatabaseHelper(this);
-        Names = new ArrayList<String>();
-        images = new ArrayList<Integer>();
-        Prices = new ArrayList<Integer>();
 
+        String CategoryName = getIntent().getExtras().getString("Category_selected");
         // Get The Icon Beside The Title
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -51,16 +46,22 @@ public class MainActivity extends AppCompatActivity implements Adapter.clickMenu
 
         cart_btn = findViewById(R.id.cartBtn);
 
-        Cursor cursor = MyStore.Retrive_all();
+        Cursor cursor = MyStore.Retrive_products_of_category(CategoryName);
 
         while (!cursor.isAfterLast()) {
-            Names.add(cursor.getString(0));
+            Products.add(new Product(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getInt(2),
+                    cursor.getInt(3),
+                    cursor.getInt(4),
+                    cursor.getString(5)));
+            /*Names.add(cursor.getString(0));
             Prices.add(cursor.getInt(1));
-            images.add(cursor.getInt(2));
+            images.add(cursor.getInt(2));*/
             cursor.moveToNext();
         }
 
-        myadapter = new Adapter(this, Names,images, Prices,this);
+        myadapter = new Adapter(this, Products, this::clickMenuItem);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,RecyclerView.VERTICAL,false);
         datalist.setLayoutManager(gridLayoutManager);
         datalist.setAdapter(myadapter);

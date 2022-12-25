@@ -23,6 +23,7 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
     RecyclerView CartDatalist;
     Adapter myAdapter;
     myDatabaseHelper myStore;
+    ArrayList<Product> Products = new ArrayList<Product>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,12 @@ public class Cart extends AppCompatActivity implements Adapter.clickMenuItemList
         cursor = myStore.FetchForData(Phone_Number);   //fetching Products from Cart Table
 
 
-        // assigning Retreived Data to the lists to be added into the Adapter
+        // assigning Retrieved Data to the lists to be added into the Adapter
         int counter = 0;
         while (counter < cursor.size()) {
             if (cursor != null) {
                 while (cursor.get(counter).moveToNext()) {
-                    Names.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow("Name"))); //Name_Column
+                    Names.add(cursor.get(counter).getString(cursor.get(counter).getColumnIndexOrThrow("name"))); //Name_Column
                     Price.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow("price"))); //Price_Column
                     images.add(cursor.get(counter).getInt(cursor.get(counter).getColumnIndexOrThrow("photo")));//Image_Column
 

@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,16 +28,20 @@ public class Register extends AppCompatActivity {
 
     //Micky creating objects of DatabaseReference class to access firebase realtime
     DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReferenceFromUrl("https://loginregister-database-default-rtdb.firebaseio.com/");
+    private DatePickerDialog picker;
+    TextView birthDateTXT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //getSupportActionBar().hide();
 
         // Get The Icon Beside The Title
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setIcon(R.mipmap.ic_launcher_round);
+        birthDateTXT = (TextView) findViewById(R.id.BirthDate);
 
         final EditText fullname=findViewById(R.id.fullname);
         final EditText email=findViewById(R.id.email);
@@ -41,8 +49,21 @@ public class Register extends AppCompatActivity {
         final EditText password=findViewById(R.id.password);
         final EditText conPassword=findViewById(R.id.conPassword);
 
+        final EditText address =findViewById(R.id.address);
+        final EditText bestfriend =findViewById(R.id.bestfriend);
+
         final Button registerBtn=findViewById(R.id.registerBtb);
         final TextView loginNowBtn=findViewById(R.id.loginNow);
+//        birthdate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(),Calender.class);
+//                startActivity(intent);
+//            }
+//        });
+
+       //birthdate.setText(Calender.Date);
+        //Toast.makeText(Register.this, "Data"+date, Toast.LENGTH_SHORT).show();
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,10 +76,13 @@ public class Register extends AppCompatActivity {
                 final String phoneTxt=phone.getText().toString();
                 final String passwordTxt=password.getText().toString();
                 final String conPasswordTxt=conPassword.getText().toString();
-
+                final String birthdateTxt=birthDateTXT.getText().toString();
+                final String addressTxt=address.getText().toString();
+                final String bestfriendTxt=bestfriend.getText().toString();
+                //String birthDate = birthDateTXT.getText().toString();
                 // check if the Fuckin User fill all the fields before sending data to Firebase
 
-                if(fullnameTxt.isEmpty() || emailTxt.isEmpty() || phoneTxt.isEmpty() || passwordTxt.isEmpty() || conPasswordTxt.isEmpty())
+                if(fullnameTxt.isEmpty() || emailTxt.isEmpty() || phoneTxt.isEmpty() || passwordTxt.isEmpty() || conPasswordTxt.isEmpty()||bestfriendTxt.isEmpty()||addressTxt.isEmpty())
                 {
                     Toast.makeText(Register.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }
@@ -102,6 +126,9 @@ public class Register extends AppCompatActivity {
                                 databaseReference.child("users").child(phoneTxt).child("fullname").setValue(fullnameTxt);
                                 databaseReference.child("users").child(phoneTxt).child("email").setValue(emailTxt);
                                 databaseReference.child("users").child(phoneTxt).child("password").setValue(passwordTxt);
+                                databaseReference.child("users").child(phoneTxt).child("Birth Date").setValue(birthdateTxt);
+                                databaseReference.child("users").child(phoneTxt).child("Address").setValue(addressTxt);
+                                databaseReference.child("users").child(phoneTxt).child("bestfriend").setValue(bestfriendTxt);
 
                                 // show success message when user registered, then finish the activity.
 
@@ -123,6 +150,7 @@ public class Register extends AppCompatActivity {
 
 
             }
+
         });
         loginNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,9 +159,22 @@ public class Register extends AppCompatActivity {
             }
         });
 
-
+        birthDateTXT.setOnClickListener(v -> handleDatePicking());
 
     }
+    private void handleDatePicking(){
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
 
-
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    monthOfYear++;
+                    String date = ""+year+" / "+monthOfYear+" / "+dayOfMonth+"";
+                    birthDateTXT.setText(date);
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
 }
