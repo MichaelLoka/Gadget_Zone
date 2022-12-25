@@ -19,7 +19,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "My message";
 
     public myDatabaseHelper(@Nullable Context context) {
-        super(context, DATABASENAME, null, 1);
+        super(context, DATABASENAME, null, 2);
     }
 
     @Override
@@ -27,16 +27,16 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
 
         //Categories table
-        sqLiteDatabase.execSQL("CREATE TABLE Categories (category text PRIMARY KEY not null,photo Integer Not null)");
-
-        ContentValues row1 = new ContentValues();
-        row1.put("category", "Electronics");
-        row1.put("photo",R.drawable.electronics_category);
-        sqLiteDatabase.insert("Categories ", null, row1);
+        sqLiteDatabase.execSQL("CREATE TABLE Categories (category text PRIMARY KEY not null,photo blob Not null)");
+                                                                                     //blob is a bitmap
+        //ContentValues row1 = new ContentValues();
+        //row1.put("category", "Electronics");
+        //row1.put("photo",R.drawable.electronics_category);
+        //sqLiteDatabase.insert("Categories ", null, row1);
 
         //product table
         sqLiteDatabase.execSQL("create table products (product_id integer primary key autoincrement" +
-                ",name text not null,quantity integer , price integer not null , photo integer not null,category text not null," +
+                ",name text not null,quantity integer , price integer not null , photo blob not null,category text not null," +
                 "FOREIGN KEY (category) references categories(category));");
 
         ContentValues row2 = new ContentValues();
@@ -106,6 +106,8 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         db.delete("cart","User_phoneNum like ? and product_id like ?",new String[]{PhoneNumber,String.valueOf(ID_Product)});
         db.close();
     }
+
+
     public Cursor Retrive_products_of_category(String cat) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("select name ,price,photo from products where category like ?",new String[] {cat});
@@ -123,7 +125,48 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void InsertProduct(Product product,int ID_Product){
+    public List<Category> Retrive_categories() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select category,photo from Categories",null);
+
+        cursor.moveToFirst();
+        db.close();
+        List<Category> c = new ArrayList<Category>();
+        while (!cursor.isAfterLast()) {
+          c.add(new Category(cursor.getBlob(1), cursor.getString(0)));
+            cursor.moveToNext();
+        }
+        return c;
+    }
+
+    public List<String>getCategoriesNames()
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select category from Categories",null);
+        cursor.moveToFirst();
+        db.close();
+        List<String> c = new ArrayList<String>();
+        while (!cursor.isAfterLast()) {
+            c.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        return c;
+    }
+    public List<Product> Retrive_Products() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select name,photo,price,category,quantity,product_id from products",null);
+
+        cursor.moveToFirst();
+        db.close();
+        List<Product> p = new ArrayList<Product>();
+        while (!cursor.isAfterLast()) {
+            p.add(new Product(cursor.getString(0),cursor.getString(2),cursor.getBlob(1),cursor.getInt(4),cursor.getString(3),cursor.getInt(5)));
+            cursor.moveToNext();
+        }
+        return p;
+    }
+
+    public void InsertProduct(Product product){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues row = new ContentValues();
 
@@ -131,11 +174,12 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         row.put("quantity",product.getQuantity());
         row.put("price",product.getPrice());
         row.put("category",product.getCategory());
-        row.put("photo",product.getImange_id());
+        row.put("photo",product.getProductImage());
 
         db.insert("products",null,row);
         db.close();
     }
+
 
     public void EditProduct(Product product,int ID_Product)
     {
@@ -146,7 +190,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         row.put("quantity",product.getQuantity());
         row.put("price",product.getPrice());
         row.put("category",product.getCategory());
-        row.put("photo",product.getImange_id());
+        row.put("photo",product.getProductImage());
 
         db.update("products",row,"product_id like ?",new String[]{String.valueOf(ID_Product)});
         db.close();
@@ -159,7 +203,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void InsertCategory(String Categorey_name,int image_id){
+    public void InsertCategory(String Categorey_name,byte[] image_id){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues row = new ContentValues();
         row.put("category",Categorey_name);
@@ -168,13 +212,14 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         db.insert("Categories",null,row);
         db.close();
     }
-    public void EditCategory(String Categorey_name,int image_id){
+    public void EditCategory(String id,String Categorey_name,byte[] image_id){
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues row = new ContentValues();
         row.put("category",Categorey_name);
         row.put("photo",image_id);
 
-        db.update("Categories",row,"Category like ?",new String[] {Categorey_name});
+        db.update("Categories",row,"Category like ?",new String[] {id});
         db.close();
     }
 
@@ -183,6 +228,12 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("Categories","Category like ?",new String[]{String.valueOf(Category)});
         db.close();
+    }
+    public void clearTable()
+    {
+    SQLiteDatabase db = this.getWritableDatabase();
+    db.execSQL("Delete from Categories");
+    db.close();
     }
 
 

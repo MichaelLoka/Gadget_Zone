@@ -3,22 +3,29 @@ package com.example.storeapp;
 public class Product {
     private String Name;
     private String Price;
-    private int Imange_id;
+    private int id;
+    private byte[] productImage;
     private int Quantity;
     private String Category;
 
-    public Product(String Name, String Price, int Image_id, int quantity,String Category){
+    public int getId() {
+        return id;
+    }
+
+
+
+    public Product(String Name, String Price, byte[] productImage, int quantity, String Category, int id){
         this.Name = Name;
-        this.Imange_id = Image_id;
+        this.productImage = productImage;
         this.Price = Price;
         this.Quantity = quantity;
         this.Category = Category;
+        this.id= id;
     }
 
     public String getCategory() {
         return Category;
     }
-
     public void setCategory(String category) {
         Category = category;
     }
@@ -26,7 +33,6 @@ public class Product {
     public String getName() {
         return Name;
     }
-
     public void setName(String name) {
         Name = name;
     }
@@ -34,23 +40,18 @@ public class Product {
     public String getPrice() {
         return Price;
     }
-
     public void setPrice(String price) {
         Price = price;
     }
 
-    public int getImange_id() {
-        return Imange_id;
+    public byte[] getProductImage() {
+        return productImage;
     }
-
-    public void setImange_id(int imange_id) {
-        Imange_id = imange_id;
-    }
+    public void setProductImage(byte[] productImage) {this.productImage= productImage;}
 
     public int getQuantity() {
         return Quantity;
     }
-
     public void setQuantity(int quantity) {
         Quantity = quantity;
     }

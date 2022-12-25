@@ -40,7 +40,11 @@ public class Login extends AppCompatActivity {
         loginBrn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //basmalla //login to admin
+                Intent i = new Intent(Login.this,ManageProducts.class);
+                startActivity(i);
+                finish();
+                //
                 final String phoneTxt =phone.getText().toString();
                 final String passwordTxt = password.getText().toString();
 

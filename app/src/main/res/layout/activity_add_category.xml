@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddCategoryActivity">
+
+
+    <ImageView
+        android:id="@+id/product_imageView"
+        android:layout_width="333dp"
+        android:layout_height="248dp"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        tools:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <EditText
+        android:id="@+id/productName_editText"
+        android:layout_width="301dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="56dp"
+        android:ems="10"
+        android:hint="Category Name"
+        android:inputType="textPersonName"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_imageView" />
+
+    <Button
+        android:id="@+id/savebtn"
+        android:layout_width="130dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="128dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/productName_editText"
+        app:layout_constraintVertical_bias="0.984" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
